@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
 @export var speed = 300
-@export var gravity = 30
-@export var jump_force = 600
+@export var gravity = 10
+@export var jump_force = 400
 
 @onready var ap = $AnimationPlayer
 @onready var sprite = $Sprite2D
@@ -10,6 +10,8 @@ extends CharacterBody2D
 @onready var crouch_raycast1 = $CrouchRaycast_1
 @onready var crouch_raycast2 = $CrouchRaycast_2
 @onready var attackCD = $attackCD
+@onready var attack_raycast1 = $AttackRaycast_1
+@onready var attack_raycast2 = $AttackRaycast_2
 
 var is_crouching = false
 var stuck_under_object = false
@@ -90,6 +92,10 @@ func update_animations(horizontal_direction):
 func switch_direction(horizontal_direction):
 	sprite.flip_h = (horizontal_direction == -1)
 	sprite.position.x = horizontal_direction * 4
+	if sprite.flip_h == false:
+		attack_raycast1.target_position.x = 8
+	elif sprite.flip_h == true:
+		attack_raycast1.target_position.x = -8
 
 func crouch():
 	if is_crouching:
@@ -108,6 +114,17 @@ func stand():
 func attack():
 	if is_attacking:
 		return
+	if attack_raycast1.is_colliding():
+		if attack_raycast1.get_collider().has_method("destroy"):
+			attack_raycast1.get_collider().destroy()
+		if attack_raycast1.get_collider().has_method("hurt"):
+			attack_raycast1.get_collider().hurt()
+	if attack_raycast2.is_colliding():
+		if attack_raycast2.get_collider().has_method("hurt"):
+			attack_raycast2.get_collider().hurt()
+		if attack_raycast2.get_collider().has_method("destroy"):
+			attack_raycast2.get_collider().destroy()
+		
 	is_attacking = true
 	attackCD.start()
 

@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://csai6mj4x4p2g"]
+
+[ext_resource type="Script" path="res://CharacterBody2D.gd" id="1_tccxq"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_jtxf3"]
+size = Vector2(80, 80)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d850i"]
+size = Vector2(40, 41)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+script = ExtResource("1_tccxq")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="CharacterBody2D"]
+modulate = Color(0.509804, 0.211765, 0.129412, 1)
+position = Vector2(2.08165e-12, 2.08165e-12)
+scale = Vector2(0.5, 0.5)
+mesh = SubResource("QuadMesh_jtxf3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+position = Vector2(2.08165e-12, 2.08165e-12)
+shape = SubResource("RectangleShape2D_d850i")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="CharacterBody2D"]
+emitting = false
+amount = 10
+lifetime = 0.5
+one_shot = true
+speed_scale = 0.5
+explosiveness = 1.0
+direction = Vector2(2.08165e-12, 2.08165e-12)
+spread = 180.0
+gravity = Vector2(2.08165e-12, 980)
+initial_velocity_min = 95.96
+initial_velocity_max = 95.96
+angle_min = -90.0
+angle_max = 90.0
+scale_amount_min = 10.0
+scale_amount_max = 10.0
+color = Color(0.454902, 0.141176, 0, 1)
