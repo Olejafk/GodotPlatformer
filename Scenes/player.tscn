@@ -502,6 +502,9 @@ _data = {
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(-50, -40)
 script = ExtResource("1_t0jsh")
+speed = null
+gravity = null
+jump_force = null
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(0, 12)
@@ -534,16 +537,6 @@ target_position = Vector2(2.08165e-12, -25)
 position = Vector2(-10, 26)
 target_position = Vector2(2.08165e-12, -25)
 
-[node name="AttackRaycast_1" type="RayCast2D" parent="."]
-position = Vector2(2.08165e-12, 20)
-scale = Vector2(10, 10)
-target_position = Vector2(-8, 2.08165e-12)
-
-[node name="AttackRaycast_2" type="RayCast2D" parent="."]
-position = Vector2(2.08165e-12, 20)
-scale = Vector2(5, 5)
-target_position = Vector2(2.08165e-12, -8)
-
 [node name="CPUParticles2D" type="CPUParticles2D" parent="."]
 position = Vector2(0, 21)
 scale = Vector2(0.1, 0.1)
@@ -564,4 +557,11 @@ scale_amount_min = 0.01
 scale_amount_max = 0.01
 color = Color(0.8, 0.101961, 0, 1)
 
+[node name="AttackHitbox" type="Area2D" parent="."]
+position = Vector2(2.08165e-12, 21)
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackHitbox"]
+polygon = PackedVector2Array(-24, 9, -30, 18, -50, 18, -57, 11, -57, -4, -49, -19, -36, -25, -1, -24, 16, -13, -7, -16, -24, -9, -31, 1)
+
 [connection signal="timeout" from="attackCD" to="." method="_on_attack_cd_timeout"]
+[connection signal="body_entered" from="AttackHitbox" to="." method="_on_attack_hitbox_body_entered"]
