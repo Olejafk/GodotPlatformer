@@ -114,13 +114,15 @@ func attack():
 	if is_attacking:
 		return
 	else:
-		func _on_attack_hitbox_body_entered(body):
-			if body.has_method("destroy"):
-				body.destroy()
-			if body.has_method("hurt"):
-				body.hurt()
 		is_attacking = true
 		attackCD.start()
+
+func _on_attack_hitbox_body_entered(body):
+	if is_attacking:
+		if body.has_method("destroy"):
+			body.destroy()
+		if body.has_method("hurt"):
+			body.hurt()
 
 func _on_attack_cd_timeout():
 	is_attacking = false

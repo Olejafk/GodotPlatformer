@@ -180,10 +180,10 @@ texture = ExtResource("2_21008")
 hframes = 3
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "Bat_idle"
 libraries = {
 "": SubResource("AnimationLibrary_oywua")
 }
+autoplay = "Bat_idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)

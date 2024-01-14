@@ -1,12 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://btmjrlpvos0b2"]
+[gd_scene load_steps=5 format=3 uid="uid://btmjrlpvos0b2"]
 
 [ext_resource type="PackedScene" uid="uid://bje6wcpr8n5r" path="res://Scenes/player.tscn" id="1_1rqvb"]
 [ext_resource type="PackedScene" uid="uid://csai6mj4x4p2g" path="res://box.tscn" id="3_fbaiw"]
 [ext_resource type="PackedScene" uid="uid://cttwaku2co0yf" path="res://Scenes/tile_map.tscn" id="3_wev3w"]
 [ext_resource type="PackedScene" uid="uid://ddoxio54tj07d" path="res://Scripts/Bat_script.tscn" id="4_u0lyk"]
-
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_aajue"]
-polygon = PackedVector2Array(-42, -14, -33, 3, -33, 16, 19, 16, 29, 31, 36, 32, 45, 47, 166, 48, 174, 64, 169, 77, 156, 78, 153, 93, 141, 94, 134, 111, 42, 111, 34, 95, 8, 96, 1, 79, -24, 80, -31, 63, -49, 63, -58, 79, -71, 80, -79, 69, -79, 32, -118, 33, -127, 20, -128, -3, -121, -16, -91, -18, -92, -28, -79, -34, -61, -33, -51, -17)
 
 [node name="World" type="Node2D"]
 
@@ -40,10 +37,3 @@ position = Vector2(-58, 1355)
 
 [node name="Bat4" parent="." instance=ExtResource("4_u0lyk")]
 position = Vector2(901, 1332)
-
-[node name="DirectionalLight2D" type="DirectionalLight2D" parent="."]
-position = Vector2(91, -184)
-color = Color(0.929412, 0.905882, 0, 1)
-
-[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
-occluder = SubResource("OccluderPolygon2D_aajue")
