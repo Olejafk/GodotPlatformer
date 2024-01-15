@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 var speed = 30
 var health = 10
-var KnockbackPower = 200
+var KnockbackPower = 20
 @onready var target = $"../Player"
 @onready var CShape = $CollisionShape2D
 @onready var ap = $AnimationPlayer
@@ -21,6 +21,8 @@ func _physics_process(delta):
 	else:
 		ap.play("Bat_Dead")
 		CShape.scale.y = 0.4
+		$".".collision_layer = 4
+		$".".collision_mask = 1
 		$DeathParticle.emitting = true
 		velocity.y += gravity * delta
 		move_and_slide()

@@ -10,7 +10,7 @@ extends CharacterBody2D
 @onready var crouch_raycast1 = $CrouchRaycast_1
 @onready var crouch_raycast2 = $CrouchRaycast_2
 @onready var attackCD = $attackCD
-@onready var attack_hitbox = $AttackHitbox
+@onready var attack_hitbox = $ShapeCast2D
 
 var is_crouching = false
 var stuck_under_object = false
@@ -64,7 +64,7 @@ func update_animations(horizontal_direction):
 	if is_attacking:
 		if is_on_floor():
 			ap.play("attack")
-		else:
+		if !is_on_floor():
 			ap.play("attack_air")
 	else:
 		if is_attacking == false:
@@ -85,16 +85,14 @@ func update_animations(horizontal_direction):
 						ap.play("jump")
 					if velocity.y > 0:
 						ap.play("fall")
-				else:
-					ap.play("crouch")
 
 func switch_direction(horizontal_direction):
 	sprite.flip_h = (horizontal_direction == -1)
 	sprite.position.x = horizontal_direction * 4
 	if sprite.flip_h == false:
-		attack_hitbox.scale.x = -1
+		attack_hitbox.scale.x = -2
 	elif sprite.flip_h == true:
-		attack_hitbox.scale.x = 1
+		attack_hitbox.scale.x = 2
 
 func crouch():
 	if is_crouching:
@@ -114,15 +112,15 @@ func attack():
 	if is_attacking:
 		return
 	else:
-		is_attacking = true
+		if attack_hitbox.is_colliding():
+			var thing_being_hit = attack_hitbox.get_collider(0)
+			if thing_being_hit.has_method("destroy"):
+				thing_being_hit.destroy()
+			if thing_being_hit.has_method("hurt"):
+				thing_being_hit.hurt()
 		attackCD.start()
+		is_attacking = true
 
-func _on_attack_hitbox_body_entered(body):
-	if is_attacking:
-		if body.has_method("destroy"):
-			body.destroy()
-		if body.has_method("hurt"):
-			body.hurt()
 
 func _on_attack_cd_timeout():
 	is_attacking = false

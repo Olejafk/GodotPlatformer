@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bje6wcpr8n5r"]
+[gd_scene load_steps=23 format=3 uid="uid://bje6wcpr8n5r"]
 
 [ext_resource type="Script" path="res://Scripts/player.gd" id="1_t0jsh"]
 [ext_resource type="Shape2D" uid="uid://ypvji7w1eyeo" path="res://resources/player_standing_cshape.tres" id="3_fn86l"]
@@ -499,8 +499,12 @@ _data = {
 "run": SubResource("Animation_wdxnl")
 }
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xj613"]
+
 [node name="Player" type="CharacterBody2D"]
 position = Vector2(-50, -40)
+collision_layer = 2
+collision_mask = 5
 script = ExtResource("1_t0jsh")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -517,10 +521,10 @@ position = Vector2(2.08165e-12, 21)
 shape = ExtResource("3_fn86l")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "idle"
 libraries = {
 "": SubResource("AnimationLibrary_xtm8j")
 }
-autoplay = "idle"
 
 [node name="attackCD" type="Timer" parent="."]
 process_callback = 0
@@ -554,12 +558,11 @@ scale_amount_min = 0.01
 scale_amount_max = 0.01
 color = Color(0.8, 0.101961, 0, 1)
 
-[node name="AttackHitbox" type="Area2D" parent="."]
-position = Vector2(2.08165e-12, 21)
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackHitbox"]
-polygon = PackedVector2Array(-24, 9, -30, 18, -50, 18, -57, 11, -57, -4, -49, -19, -36, -25, -1, -24, 16, -13, -7, -16, -24, -9, -31, 1)
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+position = Vector2(0, 12)
+scale = Vector2(2, 2)
+shape = SubResource("RectangleShape2D_xj613")
+target_position = Vector2(-21, 3)
+collision_mask = 4
 
 [connection signal="timeout" from="attackCD" to="." method="_on_attack_cd_timeout"]
-[connection signal="body_entered" from="AttackHitbox" to="." method="_on_attack_hitbox_body_entered"]
-[connection signal="body_shape_entered" from="AttackHitbox" to="." method="_on_attack_hitbox_body_shape_entered"]
