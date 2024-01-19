@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://ddoxio54tj07d"]
+[gd_scene load_steps=12 format=3 uid="uid://ddoxio54tj07d"]
 
 [ext_resource type="Script" path="res://enemy.gd" id="1_5t231"]
 [ext_resource type="Texture2D" uid="uid://dm4thiple0w2u" path="res://Assets/EnemyArt/Bat_enemy_idle_animation.png" id="2_21008"]
 [ext_resource type="Texture2D" uid="uid://tggqqv6ei7xs" path="res://Assets/EffectsArt/d2d9543e6df153f.png" id="3_0wiqf"]
 [ext_resource type="Texture2D" uid="uid://b2y32mfvolcvj" path="res://Assets/EnemyArt/pixil-frame-0.png" id="3_citwv"]
+[ext_resource type="Texture2D" uid="uid://b000s0updsala" path="res://Assets/EnemyArt/Bat_death_anim.png" id="4_fix6f"]
 
 [sub_resource type="Animation" id="Animation_f6fyt"]
 resource_name = "Bat_Dead"
@@ -162,11 +163,64 @@ tracks/3/keys = {
 "values": [0]
 }
 
+[sub_resource type="Animation" id="Animation_lli0x"]
+resource_name = "bat_death_anim"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("4_fix6f")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:vframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.1),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_oywua"]
 _data = {
 "Bat_Dead": SubResource("Animation_f6fyt"),
 "Bat_idle": SubResource("Animation_j1mxl"),
-"RESET": SubResource("Animation_0pfcy")
+"RESET": SubResource("Animation_0pfcy"),
+"bat_death_anim": SubResource("Animation_lli0x")
 }
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fhwsv"]
@@ -199,6 +253,7 @@ amount = 10
 lifetime = 0.5
 one_shot = true
 explosiveness = 1.0
+randomness = 1.0
 lifetime_randomness = 1.0
 texture = ExtResource("3_0wiqf")
 direction = Vector2(2.08165e-12, 2.08165e-12)
@@ -209,7 +264,7 @@ initial_velocity_max = 600.0
 angle_min = -90.0
 angle_max = 90.0
 scale_amount_min = 0.01
-scale_amount_max = 0.01
+scale_amount_max = 0.02
 color = Color(0.8, 0.101961, 0, 1)
 
 [node name="DeathParticle" type="CPUParticles2D" parent="."]
@@ -231,5 +286,5 @@ initial_velocity_max = 1000.0
 angle_min = -90.0
 angle_max = 90.0
 scale_amount_min = 0.01
-scale_amount_max = 0.01
+scale_amount_max = 0.03
 color = Color(0.8, 0.101961, 0, 1)

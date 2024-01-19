@@ -501,7 +501,7 @@ _data = {
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_xj613"]
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Player"]]
 position = Vector2(-50, -40)
 collision_layer = 2
 collision_mask = 5

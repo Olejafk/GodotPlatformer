@@ -19,13 +19,9 @@ func _physics_process(delta):
 			velocity = position.direction_to(target.position) * speed
 			move_and_slide()
 	else:
-		ap.play("Bat_Dead")
-		CShape.scale.y = 0.4
-		$".".collision_layer = 4
-		$".".collision_mask = 1
+		ap.play("bat_death_anim")
 		$DeathParticle.emitting = true
-		velocity.y += gravity * delta
-		move_and_slide()
+		
 
 func switch_direction(horizontal_direction):
 	Sprite2D.flip_h = (horizontal_direction == -1)
@@ -34,5 +30,5 @@ func switch_direction(horizontal_direction):
 func hurt():
 	var KnockbackDirection = -velocity * KnockbackPower
 	velocity = KnockbackDirection
-	health -= 2
+	health -= 5
 	$DMGparticle.emitting = true
