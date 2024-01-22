@@ -27,18 +27,19 @@ shape = SubResource("RectangleShape2D_d850i")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="CharacterBody2D"]
 emitting = false
-amount = 10
-lifetime = 0.5
+amount = 30
+lifetime = 0.1
 one_shot = true
 speed_scale = 0.5
 explosiveness = 1.0
-direction = Vector2(2.08165e-12, 2.08165e-12)
+lifetime_randomness = 1.0
+direction = Vector2(0, 0)
 spread = 180.0
 gravity = Vector2(2.08165e-12, 980)
-initial_velocity_min = 95.96
-initial_velocity_max = 95.96
+initial_velocity_min = 500.0
+initial_velocity_max = 500.0
 angle_min = -90.0
 angle_max = 90.0
-scale_amount_min = 10.0
-scale_amount_max = 10.0
+scale_amount_min = 5.0
+scale_amount_max = 20.0
 color = Color(0.454902, 0.141176, 0, 1)
