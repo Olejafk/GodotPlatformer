@@ -503,6 +503,8 @@ _data = {
 
 [node name="Player" type="CharacterBody2D" groups=["Player"]]
 position = Vector2(-50, -40)
+collision_layer = 5
+collision_mask = 5
 script = ExtResource("1_t0jsh")
 
 [node name="Camera2D" type="Camera2D" parent="."]
@@ -519,10 +521,10 @@ position = Vector2(2.08165e-12, 21)
 shape = ExtResource("3_fn86l")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "idle"
 libraries = {
 "": SubResource("AnimationLibrary_xtm8j")
 }
+autoplay = "idle"
 
 [node name="attackCD" type="Timer" parent="."]
 process_callback = 0
@@ -563,4 +565,9 @@ shape = SubResource("RectangleShape2D_xj613")
 target_position = Vector2(-21, 3)
 collision_mask = 4
 
+[node name="knockbackCD" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
 [connection signal="timeout" from="attackCD" to="." method="_on_attack_cd_timeout"]
+[connection signal="timeout" from="knockbackCD" to="." method="_on_knockback_cd_timeout"]

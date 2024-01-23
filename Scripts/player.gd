@@ -3,6 +3,7 @@ extends CharacterBody2D
 @export var speed = 200
 @export var gravity = 10
 @export var jump_force = 300
+@export var health = 10
 
 @onready var ap = $AnimationPlayer
 @onready var sprite = $Sprite2D
@@ -10,11 +11,14 @@ extends CharacterBody2D
 @onready var crouch_raycast1 = $CrouchRaycast_1
 @onready var crouch_raycast2 = $CrouchRaycast_2
 @onready var attackCD = $attackCD
+@onready var knockbackCD = $knockbackCD
 @onready var attack_hitbox = $ShapeCast2D
 
 var is_crouching = false
 var stuck_under_object = false
 var is_attacking = false
+var dir = 1
+var knockback = false
 
 var standing_cshape = preload("res://resources/player_standing_cshape.tres")
 var crouching_cshape = preload("res://resources/player_crouching_cshape.tres")
@@ -27,6 +31,12 @@ func _physics_process(delta):
 	
 	if Input.is_action_just_pressed("jump") && is_on_floor():
 		velocity.y = -jump_force
+	
+	if Input.is_action_just_pressed("move_left"):
+		dir = -1
+	
+	if Input.is_action_just_pressed("move_right"):
+		dir = 1
 	
 	var horizontal_direction = Input.get_axis("move_left", "move_right")
 	velocity.x = speed * horizontal_direction
@@ -52,6 +62,10 @@ func _physics_process(delta):
 	if Input.is_action_just_pressed("attack"):
 		if is_crouching == false:
 			attack()
+	
+	if knockback == true:
+		velocity.y = -100
+		velocity.x = 300 * -dir
 	
 	move_and_slide()
 	
@@ -115,8 +129,6 @@ func attack():
 	else:
 		if attack_hitbox.is_colliding():
 			var thing_being_hit = attack_hitbox.get_collider(0)
-			if thing_being_hit.has_method("destroy"):
-				thing_being_hit.destroy()
 			if thing_being_hit.has_method("hurt"):
 				thing_being_hit.hurt()
 		attackCD.start()
@@ -126,3 +138,10 @@ func attack():
 func _on_attack_cd_timeout():
 	is_attacking = false
 
+func hurt():
+	health = health - 1
+	knockback = true
+	knockbackCD.start()
+
+func _on_knockback_cd_timeout():
+	knockback = false
