@@ -32,7 +32,8 @@ func _physics_process(delta):
 	velocity.x = speed * horizontal_direction
 	
 	if horizontal_direction != 0:
-		switch_direction(horizontal_direction)
+		if !is_attacking:
+			switch_direction(horizontal_direction)
 	
 	if Input.is_action_just_pressed("crouch"):
 		crouch()

@@ -1,6 +1,7 @@
 extends CharacterBody2D
 
 @export var gravity = 10
+@export var speed = 150
 @onready var Boss_Position = position.x
 @onready var ap = $AnimationPlayer
 @onready var Attack_1_Range = $Attack_1_range/CollisionShape2D
@@ -28,16 +29,34 @@ func _physics_process(delta):
 	elif player_direction == "left":
 		Attack_1_Range.position.x = -52
 	
-	if in_range_of_attack_1 and !attack_1_active:
-		attack_1()
+	if in_range_of_attack_1 == true:
+		if state == "idle":
+			attack_1()
+	elif in_range_of_attack_1 == false:
+		if state == "idle":
+			chase()
 	
 	move_and_slide()
 	update_animations()
 
 func update_animations():
-	if attack_1_active:
-			ap.play("Boss_Attack_1")
-	elif state == "idle":
+	if state == "attacking":
+		if attack_1_active:
+			if player_direction == "left":
+				ap.play("Boss_Attack_1_Left")
+			if player_direction == "right":
+				ap.play("Boss_Attack_1_Right")
+	if state == "stunned":
+		if player_direction == "left":
+				ap.play("Boss_Stunned_Left")
+		if player_direction == "right":
+				ap.play("Boss_Stunned_Right")
+	if state == "running":
+		if player_direction == "left":
+				ap.play("Boss_Run_Left")
+		if player_direction == "right":
+				ap.play("Boss_Run_Right")
+	if state == "idle":
 		if player_direction == "right":
 			ap.play("Boss_Idle_Right")
 		elif player_direction == "left":
@@ -46,12 +65,10 @@ func update_animations():
 func _on_attack_1_range_body_entered(body):
 	if body.is_in_group("Player"):
 		in_range_of_attack_1 = true
-		print(in_range_of_attack_1)
 
 func _on_attack_1_range_body_exited(body):
 	if body.is_in_group("Player"):
 		in_range_of_attack_1 = false
-		print(in_range_of_attack_1)
 
 func attack_1():
 		Attack_1_CD.start()
@@ -61,7 +78,13 @@ func attack_1():
 
 func _on_attack_1_cd_timeout():
 	state = "idle"
-
 func _on_attack_1_active_cd_timeout():
-	attack_1_active = false
-	state = "idle"
+	state = "stunned"
+
+
+func chase():
+	if !in_range_of_attack_1:
+		state = "running"
+		velocity.x = speed * -1
+	else:
+		state = "idle"

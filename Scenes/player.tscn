@@ -515,15 +515,14 @@ flip_h = true
 hframes = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-visible = false
 position = Vector2(2.08165e-12, 21)
 shape = ExtResource("3_fn86l")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "idle"
 libraries = {
 "": SubResource("AnimationLibrary_xtm8j")
 }
-autoplay = "idle"
 
 [node name="attackCD" type="Timer" parent="."]
 process_callback = 0
@@ -558,7 +557,6 @@ scale_amount_max = 0.01
 color = Color(0.8, 0.101961, 0, 1)
 
 [node name="ShapeCast2D" type="ShapeCast2D" parent="."]
-visible = false
 position = Vector2(0, 12)
 scale = Vector2(2, 2)
 shape = SubResource("RectangleShape2D_xj613")
