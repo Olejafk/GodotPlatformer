@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://btmjrlpvos0b2"]
+[gd_scene load_steps=9 format=3 uid="uid://btmjrlpvos0b2"]
 
+[ext_resource type="Script" path="res://Levels/room_2.gd" id="1_484bi"]
 [ext_resource type="PackedScene" uid="uid://cttwaku2co0yf" path="res://Scenes/tile_map.tscn" id="1_nr1ga"]
 [ext_resource type="PackedScene" uid="uid://csai6mj4x4p2g" path="res://box.tscn" id="2_ia2i4"]
 [ext_resource type="PackedScene" uid="uid://bje6wcpr8n5r" path="res://Scenes/player.tscn" id="3_1prac"]
-[ext_resource type="PackedScene" uid="uid://brottb4yb3tdn" path="res://next_level.tscn" id="4_a61u4"]
+[ext_resource type="PackedScene" path="res://next_level.tscn" id="4_a61u4"]
 [ext_resource type="PackedScene" uid="uid://becsgkxoan8on" path="res://Boss.tscn" id="5_3j0dn"]
+[ext_resource type="AudioStream" uid="uid://bdbef5o73n2nf" path="res://resources/Sukuna vs MahoragaJujutsu Kaisen S2 EP17 OST 呪術廻戦 [Epic Cover].mp3" id="6_u3qk7"]
+[ext_resource type="Script" path="res://Levels/AudioStreamPlayer2D.gd" id="8_4dpxp"]
 
 [node name="room_2" type="Node2D"]
+script = ExtResource("1_484bi")
 
 [node name="TileMap" parent="." instance=ExtResource("1_nr1ga")]
 position = Vector2(248, 427)
@@ -24,3 +28,10 @@ position = Vector2(929, 144)
 
 [node name="Boss" parent="." instance=ExtResource("5_3j0dn")]
 position = Vector2(524, 106)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(420, 0)
+stream = ExtResource("6_u3qk7")
+script = ExtResource("8_4dpxp")
+
+[connection signal="tree_entered" from="AudioStreamPlayer2D" to="." method="_on_audio_stream_player_2d_tree_entered"]

@@ -67,6 +67,9 @@ func _physics_process(delta):
 		velocity.y = -100
 		velocity.x = 300 * -dir
 	
+	if health <= 0:
+		get_tree().change_scene_to_file("res://main_menu.tscn")
+	
 	move_and_slide()
 	
 	update_animations(horizontal_direction)
@@ -76,7 +79,9 @@ func above_head_is_empty() -> bool:
 	return result
 
 func update_animations(horizontal_direction):
-	if is_attacking:
+	if knockback == true:
+		ap.play("knockback")
+	elif is_attacking:
 		if is_on_floor():
 			ap.play("attack")
 		if !is_on_floor():

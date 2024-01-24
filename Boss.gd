@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var gravity = 10
-@export var speed = 0.5
+@export var speed = 1
 @export var health = 10
 @onready var attack_hitbox = $ShapeCast2D
 @onready var Boss_Position = position.x
@@ -54,11 +54,14 @@ func _physics_process(delta):
 			velocity.x = 0
 	
 	if state == "knockback":
-			velocity.y = -100
-			velocity.x = 300 * knockback_dir
+		velocity.y = -100
+		velocity.x = 300 * knockback_dir
 	
 	if health <= 0:
 		pass
+	
+	if health <= 0:
+		get_tree().change_scene_to_file("res://Victory_Screen.tscn")
 	
 	move_and_slide()
 	update_animations()
@@ -86,6 +89,11 @@ func update_animations():
 			ap.play("Boss_Idle_Right")
 		elif player_direction == "left":
 			ap.play("Boss_Idle_Left")
+	if state == "knockback":
+		if player_direction == "left":
+			ap.play("Boss_Hit_Left")
+		if player_direction == "right":
+			ap.play("Boss_Hit_Right")
 
 func _on_attack_1_range_body_entered(body):
 	if body.is_in_group("Player"):

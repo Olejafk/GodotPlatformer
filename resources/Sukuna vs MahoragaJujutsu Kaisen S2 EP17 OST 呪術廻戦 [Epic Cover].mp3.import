@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bdbef5o73n2nf"
+path="res://.godot/imported/Sukuna vs MahoragaJujutsu Kaisen S2 EP17 OST 呪術廻戦 [Epic Cover].mp3-4c3772d8336920f6aaa885e72c6a4cf4.mp3str"
+
+[deps]
+
+source_file="res://resources/Sukuna vs MahoragaJujutsu Kaisen S2 EP17 OST 呪術廻戦 [Epic Cover].mp3"
+dest_files=["res://.godot/imported/Sukuna vs MahoragaJujutsu Kaisen S2 EP17 OST 呪術廻戦 [Epic Cover].mp3-4c3772d8336920f6aaa885e72c6a4cf4.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
