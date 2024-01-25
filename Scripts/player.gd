@@ -4,6 +4,7 @@ extends CharacterBody2D
 @export var gravity = 10
 @export var jump_force = 300
 @export var health = 10
+@export var max_health = 10
 
 @onready var ap = $AnimationPlayer
 @onready var sprite = $Sprite2D
@@ -23,6 +24,10 @@ var knockback = false
 var standing_cshape = preload("res://resources/player_standing_cshape.tres")
 var crouching_cshape = preload("res://resources/player_crouching_cshape.tres")
 
+func _ready():
+	set_health_bar()
+	$Camera2D/healthbar.max_value = max_health
+
 func _physics_process(delta):
 	if !is_on_floor():
 		velocity.y += gravity
@@ -33,10 +38,12 @@ func _physics_process(delta):
 		velocity.y = -jump_force
 	
 	if Input.is_action_just_pressed("move_left"):
-		dir = -1
+		if knockback == false:
+			dir = -1
 	
 	if Input.is_action_just_pressed("move_right"):
-		dir = 1
+		if knockback == false:
+			dir = 1
 	
 	var horizontal_direction = Input.get_axis("move_left", "move_right")
 	velocity.x = speed * horizontal_direction
@@ -64,14 +71,16 @@ func _physics_process(delta):
 			attack()
 	
 	if knockback == true:
+		$Sprite2D.modulate = Color(255,0,0)
 		velocity.y = -100
 		velocity.x = 300 * -dir
+	elif knockback == false:
+		$Sprite2D.modulate = Color(1,1,1)
 	
 	if health <= 0:
 		get_tree().change_scene_to_file("res://main_menu.tscn")
 	
 	move_and_slide()
-	
 	update_animations(horizontal_direction)
 
 func above_head_is_empty() -> bool:
@@ -107,12 +116,13 @@ func update_animations(horizontal_direction):
 						ap.play("fall")
 
 func switch_direction(horizontal_direction):
-	sprite.flip_h = (horizontal_direction == -1)
-	sprite.position.x = horizontal_direction * 4
-	if sprite.flip_h == false:
-		attack_hitbox.scale.x = -2
-	elif sprite.flip_h == true:
-		attack_hitbox.scale.x = 2
+	if knockback == false:
+		sprite.flip_h = (horizontal_direction == -1)
+		sprite.position.x = horizontal_direction * 4
+		if sprite.flip_h == false:
+			attack_hitbox.scale.x = -2
+		elif sprite.flip_h == true:
+			attack_hitbox.scale.x = 2
 
 func crouch():
 	if is_crouching:
@@ -145,8 +155,12 @@ func _on_attack_cd_timeout():
 
 func hurt():
 	health = health - 1
+	set_health_bar()
 	knockback = true
 	knockbackCD.start()
 
 func _on_knockback_cd_timeout():
 	knockback = false
+
+func set_health_bar():
+	$Camera2D/healthbar.value = health

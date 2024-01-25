@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://dl2fq5c51mtwc"]
+[gd_scene load_steps=3 format=3 uid="uid://cqp8ynl83kg4d"]
 
 [ext_resource type="Texture2D" uid="uid://tggqqv6ei7xs" path="res://Assets/EffectsArt/d2d9543e6df153f.png" id="1_c1c7u"]
 [ext_resource type="Script" path="res://CanvasLayer.gd" id="2_b3xw5"]
@@ -52,7 +52,7 @@ theme_override_constants/separation = 5
 [node name="Label" type="Label" parent="CanvasLayer/Main/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-text = "hi chat"
+text = "placeholder"
 horizontal_alignment = 1
 
 [node name="ButtonPlay" type="Button" parent="CanvasLayer/Main/CenterContainer/PanelContainer/MarginContainer/VBoxContainer"]

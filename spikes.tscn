@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bdx4ae8org3gk"]
+
+[ext_resource type="Script" path="res://Next_level.gd" id="1_777px"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f8xlt"]
+size = Vector2(98, 20)
+
+[sub_resource type="QuadMesh" id="QuadMesh_kyass"]
+
+[node name="spikes" type="Area2D"]
+script = ExtResource("1_777px")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(39, 0)
+shape = SubResource("RectangleShape2D_f8xlt")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(39.3125, 0)
+scale = Vector2(97.375, 19.75)
+mesh = SubResource("QuadMesh_kyass")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered" flags=18]

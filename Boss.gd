@@ -3,6 +3,7 @@ extends CharacterBody2D
 @export var gravity = 10
 @export var speed = 1
 @export var health = 10
+@export var max_health = 10
 @onready var attack_hitbox = $ShapeCast2D
 @onready var Boss_Position = position.x
 @onready var ap = $AnimationPlayer
@@ -11,13 +12,19 @@ extends CharacterBody2D
 @onready var Attack_1_CD = $Attack_1_CD
 @onready var Attack_1_active_CD = $Attack_1_active_CD
 @onready var knockback_CD = $Knockback_CD
+@onready var iframesCD = $iframesCD
 var state = "idle"
-var player_direction
-var in_range_of_attack_1
+var player_direction = "left"
+var in_range_of_attack_1 = false
 var attack_1_active
 var player_position
 var target_position
 var knockback_dir
+var iframes = false
+
+func _ready():
+	$healthbar.max_value = max_health
+	set_health_bar()
 
 func _physics_process(delta):
 	if !is_on_floor():
@@ -25,16 +32,11 @@ func _physics_process(delta):
 		if velocity.y > 1000:
 			velocity.y = 1000
 	
-	if Player.position.x > Boss_Position:
-		player_direction = "right"
-	elif Player.position.x < Boss_Position:
-		player_direction = "left"
-	
 	if player_direction == "right":
-		Attack_1_Range.position.x = 52
+		Attack_1_Range.position.x = 35
 		attack_hitbox.scale.x = -2
 	elif player_direction == "left":
-		Attack_1_Range.position.x = -52
+		Attack_1_Range.position.x = -35
 		attack_hitbox.scale.x = 2
 	
 	if in_range_of_attack_1 == true:
@@ -57,11 +59,15 @@ func _physics_process(delta):
 		velocity.y = -100
 		velocity.x = 300 * knockback_dir
 	
-	if health <= 0:
-		pass
+	if iframes == true:
+		$Sprite2D.modulate = Color(255,0,0)
+		$BossHeadParticles.modulate = Color(255,0,0)
+	elif iframes == false:
+		$Sprite2D.modulate = Color(1,1,1)
+		$BossHeadParticles.modulate = Color(1,1,1)
 	
 	if health <= 0:
-		get_tree().change_scene_to_file("res://Victory_Screen.tscn")
+		get_parent().remove_child($".")
 	
 	move_and_slide()
 	update_animations()
@@ -133,11 +139,34 @@ func chase():
 
 
 func hurt():
-	var player_dir = Player.dir
-	knockback_dir = player_dir
-	state = "knockback"
-	knockback_CD.start()
-	health = health - 1
+	if iframes == false:
+		var player_dir = Player.dir
+		knockback_dir = player_dir
+		state = "knockback"
+		iframes = true
+		knockback_CD.start()
+		iframesCD.start()
+		health = health - 1
+		set_health_bar()
 
 func _on_knockback_cd_timeout():
 	state = "idle"
+
+
+func _on_player_direction_area_left_body_entered(body):
+	if body.is_in_group("Player"):
+		player_direction = "left"
+
+func _on_player_direction_area_right_body_entered(body):
+	if body.is_in_group("Player"):
+		player_direction = "right"
+
+func _on_player_direction_top_body_entered(body):
+	if body.is_in_group("Player"):
+		player_direction = "top"
+
+func _on_iframes_cd_timeout():
+	iframes = false
+
+func set_health_bar():
+	$healthbar.value = health

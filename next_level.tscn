@@ -1,15 +1,27 @@
-[gd_scene load_steps=4 format=3 uid="uid://brottb4yb3tdn"]
+[gd_scene load_steps=4 format=3 uid="uid://bdf4owbmsnn3u"]
 
-[ext_resource type="Script" path="res://Next_level.gd" id="1_vaefd"]
+[sub_resource type="GDScript" id="GDScript_bou3y"]
+script/source = "extends Area2D
+
+
+func _on_body_entered(body):
+	if body.is_in_group(\"Player\"):
+		var current_scene_file = get_tree().current_scene.scene_file_path
+		var next_level_number = current_scene_file.to_int() + 1
+		var next_level_path = \"res://Levels/room_\" + str(next_level_number) + \".tscn\"
+		get_tree().change_scene_to_file(next_level_path)
+"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_f8xlt"]
+size = Vector2(19.5, 20)
 
 [sub_resource type="QuadMesh" id="QuadMesh_kyass"]
 
 [node name="Next_level" type="Area2D"]
-script = ExtResource("1_vaefd")
+script = SubResource("GDScript_bou3y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.25, 0)
 shape = SubResource("RectangleShape2D_f8xlt")
 
 [node name="MeshInstance2D" type="MeshInstance2D" parent="."]
