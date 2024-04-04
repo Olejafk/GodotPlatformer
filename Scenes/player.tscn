@@ -590,10 +590,6 @@ libraries = {
 "": SubResource("AnimationLibrary_xtm8j")
 }
 
-[node name="attackCD" type="Timer" parent="."]
-process_callback = 0
-wait_time = 0.35
-
 [node name="CrouchRaycast_1" type="RayCast2D" parent="."]
 position = Vector2(10, 26)
 target_position = Vector2(2.08165e-12, -25)
@@ -630,9 +626,18 @@ shape = SubResource("RectangleShape2D_xj613")
 target_position = Vector2(-21, 3)
 collision_mask = 4
 
-[node name="knockbackCD" type="Timer" parent="."]
+[node name="CDs" type="Node" parent="."]
+
+[node name="iframeCD" type="Timer" parent="CDs"]
+
+[node name="knockbackCD" type="Timer" parent="CDs"]
 wait_time = 0.5
 one_shot = true
 
-[connection signal="timeout" from="attackCD" to="." method="_on_attack_cd_timeout"]
-[connection signal="timeout" from="knockbackCD" to="." method="_on_knockback_cd_timeout"]
+[node name="attackCD" type="Timer" parent="CDs"]
+process_callback = 0
+wait_time = 0.35
+
+[connection signal="timeout" from="CDs/iframeCD" to="." method="_on_iframe_cd_timeout"]
+[connection signal="timeout" from="CDs/knockbackCD" to="." method="_on_knockback_cd_timeout"]
+[connection signal="timeout" from="CDs/attackCD" to="." method="_on_attack_cd_timeout"]

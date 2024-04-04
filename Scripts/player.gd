@@ -11,8 +11,9 @@ extends CharacterBody2D
 @onready var cshape = $CollisionShape2D
 @onready var crouch_raycast1 = $CrouchRaycast_1
 @onready var crouch_raycast2 = $CrouchRaycast_2
-@onready var attackCD = $attackCD
-@onready var knockbackCD = $knockbackCD
+@onready var attackCD = $CDs/attackCD
+@onready var iframeCD = $CDs/iframeCD
+@onready var knockbackCD = $CDs/knockbackCD
 @onready var attack_hitbox = $ShapeCast2D
 
 var is_crouching = false
@@ -20,6 +21,8 @@ var stuck_under_object = false
 var is_attacking = false
 var dir = 1
 var knockback = false
+var respawn_point
+var iframes = false
 
 var standing_cshape = preload("res://resources/player_standing_cshape.tres")
 var crouching_cshape = preload("res://resources/player_crouching_cshape.tres")
@@ -164,3 +167,14 @@ func _on_knockback_cd_timeout():
 
 func set_health_bar():
 	$Camera2D/healthbar.value = health
+
+func spikes():
+	if iframes == false:
+		position = respawn_point
+		health = health - 1
+		set_health_bar()
+		iframes = true
+		iframeCD.start()
+
+func _on_iframe_cd_timeout():
+	iframes = false

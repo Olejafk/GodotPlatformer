@@ -137,7 +137,6 @@ func chase():
 	if !in_range_of_attack_1:
 		state = "running"
 
-
 func hurt():
 	if iframes == false:
 		var player_dir = Player.dir
@@ -151,7 +150,6 @@ func hurt():
 
 func _on_knockback_cd_timeout():
 	state = "idle"
-
 
 func _on_player_direction_area_left_body_entered(body):
 	if body.is_in_group("Player"):
