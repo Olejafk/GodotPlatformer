@@ -14,11 +14,18 @@ extends CharacterBody2D
 @onready var attackCD = $CDs/attackCD
 @onready var iframeCD = $CDs/iframeCD
 @onready var knockbackCD = $CDs/knockbackCD
-@onready var attack_hitbox = $ShapeCast2D
+@onready var attack_hitbox = $BasicAttackHitbox
+@onready var charge_attack_tier1 = $ChargedAttackHitbox1
 
 var is_crouching = false
 var stuck_under_object = false
 var is_attacking = false
+var charge_level = 0
+var charging = false
+var ready_to_charge = false
+var readyToChargeTimerActive = false
+var chargeTimerActive = false 
+var chargeAttackTier1 = false
 var dir = 1
 var knockback = false
 var respawn_point
@@ -38,25 +45,31 @@ func _physics_process(delta):
 			velocity.y = 1000
 	
 	if Input.is_action_just_pressed("jump") && is_on_floor():
-		velocity.y = -jump_force
+		if charging == false:
+			velocity.y = -jump_force
 	
 	if Input.is_action_just_pressed("move_left"):
-		if knockback == false:
+		if knockback == false and charging == false:
 			dir = -1
 	
 	if Input.is_action_just_pressed("move_right"):
-		if knockback == false:
+		if knockback == false and charging == false:
 			dir = 1
 	
 	var horizontal_direction = Input.get_axis("move_left", "move_right")
-	velocity.x = speed * horizontal_direction
+	if !charging:
+		velocity.x = speed * horizontal_direction
+	elif charging == true:
+		velocity.x = 0
 	
 	if horizontal_direction != 0:
 		if !is_attacking:
-			switch_direction(horizontal_direction)
+			if charging == false:
+				switch_direction(horizontal_direction)
 	
 	if Input.is_action_just_pressed("crouch"):
-		crouch()
+		if charging == false:
+			crouch()
 	elif Input.is_action_just_released("crouch"):
 		if above_head_is_empty():
 			stand()
@@ -69,9 +82,60 @@ func _physics_process(delta):
 			stand()
 			stuck_under_object = false
 	
-	if Input.is_action_just_pressed("attack"):
-		if is_crouching == false:
-			attack()
+	if is_crouching == false && is_attacking == false:
+		if Input.is_action_just_pressed("attack"):
+			if readyToChargeTimerActive == false:
+				$CDs/chargeStartTimer.start()
+				readyToChargeTimerActive = true
+			if ready_to_charge == true:
+				charging = true
+				charge_level = 0
+				print(charging)
+		if Input.is_action_just_released("attack") and charge_level == 0:
+			if charging:
+				attack()
+				charge_level = 0
+				charging = false
+			else:
+				attack()
+				charge_level = 0
+				charging = false
+		if Input.is_action_just_released("attack") and charge_level > 0:
+			chargeAttackTier1 = true
+			charging = false
+			charge_level = 0
+	
+	if charging == false:
+		$ChargeAttackDust.emitting = false
+		$ChargeAttackDust2.emitting = false
+		$ChargeAttackPillar.emitting = false
+		$ChargeAttackPillar2.emitting = false
+		$ChargeAttackSword.emitting = false
+		$Sprite2D.position.x = 0
+	
+	if dir == 1:
+		charge_attack_tier1.position.x = 0
+		if charge_level > 0:
+			$ChargeAttackSword.gravity.x = -1100
+			$Sprite2D.position.x = -5
+	if dir == -1:
+		charge_attack_tier1.position.x = -160
+		if charge_level > 0:
+			$ChargeAttackSword.gravity.x = 1100
+			$Sprite2D.position.x = 5
+	
+	if charging:
+		if charge_level == 0 and chargeTimerActive == false:
+			charge_attack()
+		elif charge_level == 1 and chargeTimerActive == false:
+			charge_attack()
+		elif charge_level == 2 and chargeTimerActive == false:
+			charge_attack()
+		elif charge_level == 3 and chargeTimerActive == false:
+			pass
+	
+	if chargeAttackTier1 == true:
+		_charge_attack1_damage()
 	
 	if knockback == true:
 		$Sprite2D.modulate = Color(255,0,0)
@@ -98,6 +162,13 @@ func update_animations(horizontal_direction):
 			ap.play("attack")
 		if !is_on_floor():
 			ap.play("attack_air")
+	elif charging == true:
+		if charge_level == 1:
+			ap.play("Charge_attack_charging_1")
+		elif charge_level == 2:
+			ap.play("Charge_attack_charging_2")
+		elif charge_level == 3:
+			ap.play("Charge_attack_charging_3")
 	else:
 		if is_attacking == false:
 			if is_on_floor():
@@ -152,9 +223,23 @@ func attack():
 		attackCD.start()
 		is_attacking = true
 
-
 func _on_attack_cd_timeout():
 	is_attacking = false
+
+func _charge_attack_tier1():
+	chargeAttackTier1 = true
+	$CDs/chargeAttackTier1CD.start()
+
+func _charge_attack1_damage():
+	if charge_attack_tier1.has_overlapping_bodies():
+		var thing_being_hit = charge_attack_tier1.get_overlapping_bodies()
+		if thing_being_hit.has_method("hurt"):
+			thing_being_hit.hurt()
+
+func charge_attack():
+	if ready_to_charge:
+		$CDs/ChargeTimer.start()
+		chargeTimerActive = true
 
 func hurt():
 	health = health - 1
@@ -178,3 +263,18 @@ func spikes():
 
 func _on_iframe_cd_timeout():
 	iframes = false
+
+func _on_charge_timer_timeout():
+	if charge_level < 4:
+		charge_level = charge_level + 1
+	chargeTimerActive = false
+	print(charge_level)
+
+func _on_charge_start_timer_timeout():
+	if ready_to_charge == false:
+		ready_to_charge = true
+	readyToChargeTimerActive = false
+	print("ready to charge")
+
+func _on_charge_attack_tier_1cd_timeout():
+	chargeAttackTier1 = false
